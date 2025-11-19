@@ -1,0 +1,69 @@
+# Workflow Static website deployment to Github Pages
+
+name: Deploy Static site to Pages
+
+on:
+  # Event push (ketika ada commit yang dipush)
+  push:
+    # Hanya berjalan ketika push ke branch 'main'
+    branches:
+      - main
+    # Hanya berjalan ketika push mengubah file 'index.html'
+    paths:
+      - 'index.html'
+
+  # Mengizinkan untuk menjalankan workflow secara manual dari tab Actions
+  workflow_dispatch: 
+
+# Mengatur permission yang dibutuhkan untuk workflow ini
+permissions:
+  # Izin baca konten repository
+  contents: read
+  # Izin menulis ke GitHub Pages
+  pages: write
+  # Izin untuk menulis token ID (diperlukan untuk autentikasi)
+  id-token: write
+
+# Pengaturan concurrency untuk menghindari workflow berjalan bersamaan
+concurrency:
+  # Mengelompokkan workflow dengan group key 'deploy-pages'
+  group: 'deploy-pages'
+  # Jangan batalkan workflow yang sedang berjalan saat ada trigger baru
+  cancel-in-progress: false
+
+# Mendefinisikan job-job yang akan dijalankan
+jobs:
+  deploy:
+    # Mengatur environment untuk deployment
+    environment:
+      name: github-pages
+      # URL output dari step deployment (akan diisi otomatis)
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Menjalankan job di runner ubuntu-latest
+    runs-on: ubuntu-latest
+    # Mendefinisikan langkah-langkah yang akan dijalankan
+    steps:
+      # Step 1: Mengecek/mengunduh kode dari repository
+      - name: Checkout
+        # Menggunakan action checkout versi 4
+        uses: actions/checkout@v4
+
+      # Step 2: Mengkonfigurasi GitHub Pages
+      - name: Setup pages
+        # Menggunakan action configure-pages versi 5
+        uses: actions/configure-pages@v5
+
+      # Step 3: Mengunggah artifact (file static website)
+      - name: Upload artifact
+        # Menggunakan action upload-pages-artifact versi 3
+        uses: actions/upload-pages-artifact@v3
+        # Parameter: upload seluruh file dari direktori root ('.')
+        with:
+          paths: '.'
+
+      # Step 4: Deploy ke GitHub Pages
+      - name: Deploy to Github Pages
+        # ID step untuk referensi output di step lain
+        id: deployment
+        # Menggunakan action deploy-pages versi 4
+        uses: action/deploy-pages@v4
