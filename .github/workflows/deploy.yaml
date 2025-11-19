@@ -8,9 +8,9 @@ on:
     # Hanya berjalan ketika push ke branch 'main'
     branches:
       - main
-    # Hanya berjalan ketika push mengubah file 'index.html'
-    paths:
-      - 'index.html'
+    # Workflow Hanya berjalan ketika push mengubah file 'index.html'
+  # paths:
+  #   - 'index.html'
 
   # Mengizinkan untuk menjalankan workflow secara manual dari tab Actions
   workflow_dispatch: 
@@ -59,7 +59,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         # Parameter: upload seluruh file dari direktori root ('.')
         with:
-          paths: '.'
+          path: '.'
 
       # Step 4: Deploy ke GitHub Pages
       - name: Deploy to Github Pages
