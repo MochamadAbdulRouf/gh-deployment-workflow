@@ -66,4 +66,4 @@ jobs:
         # ID step untuk referensi output di step lain
         id: deployment
         # Menggunakan action deploy-pages versi 4
-        uses: action/deploy-pages@v4
+        uses: actions/deploy-pages@v4
