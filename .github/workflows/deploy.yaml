@@ -9,8 +9,8 @@ on:
     branches:
       - main
     # Workflow Hanya berjalan ketika push mengubah file 'index.html'
-  # paths:
-  #   - 'index.html'
+    paths:
+     - 'index.html'
 
   # Mengizinkan untuk menjalankan workflow secara manual dari tab Actions
   workflow_dispatch: 
